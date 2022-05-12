@@ -3,6 +3,7 @@ import numpy as np
 import os
 import time
 import cv2
+import pytesseract
 #from time import time
 from windowcapture import WindowCapture
 from ctypes import windll
@@ -30,11 +31,11 @@ while(True):
     # get an updated image of the game
     screenshot = wincap.get_screenshot()
 
-    screenshot = cv2.rectangle(screenshot, (875, 125), (1100, 175), (0,255,0), 2)
+    screenshot = cv2.rectangle(screenshot, (875, 125), (1100, 225), (0,255,0), 2)
     screenshot = cv2.rectangle(screenshot, (475, 525), (822, 650), (0,255,0), 2)
 
     # crop screenshot image by height then by width, Y then X
-    equip_region =  screenshot[125:175,875:1100]
+    equip_region =  screenshot[125:225,875:1100]
     substat_region = screenshot[525:650,475:822]
 
     cv.imshow('Computer Vision', screenshot)
@@ -45,13 +46,19 @@ while(True):
     print('FPS {}'.format(1 / (time.time() - loop_time)))
     loop_time = time.time()
 
+    # tesseract ocr code
+    myconfig = r"--psm 3 --oem 0"
+    text = pytesseract.image_to_string(equip_region, config=myconfig, output_type=pytesseract.Output.DICT)
+    print(text)
+
+
     # press 'q' with the output window focused to exit.
     # waits 1 ms every loop to process key presses
     if cv.waitKey(1) == ord('q'):
         cv.destroyAllWindows()
         break
 
-    time.sleep(0.25)
+    time.sleep(1)
 
 
 print('Done.')
