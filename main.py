@@ -28,7 +28,7 @@ while(True):
     screenshot = wincap.get_screenshot()
 
     screenshot = cv.rectangle(screenshot, Parser.EQUIPPED_BY_TOP_LEFT, Parser.EQUIPPED_BY_BOT_RIGHT, (0,255,0), 2)
-    screenshot = cv.rectangle(screenshot, Parser.SUBSTAT_TOP_LEFT, Parser.SUBSTAT_BOT_RIGHT, (0,255,0), 2)
+    screenshot = cv.rectangle(screenshot, Parser.SUBSTAT_TOP_LEFT, Parser.SUBSTAT_BOT_RIGHT, (0,0,0), 2)
 
     # crop screenshot image by height then by width, Y then X
     equip_region =  screenshot[125:225,875:1100]
