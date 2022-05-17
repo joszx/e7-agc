@@ -43,8 +43,8 @@ while(True):
 
     # turn substat region bw for tesseract better processing
     substat_text_region_bw = screengrabber.transform_image_bw(substat_text_region, 30)
-    #substat_region_bw = screengrabber.upscale_image(substat_region_bw, 1.2)
-    substat_roll_region_bw = screengrabber.transform_image_bw(substat_roll_region_filtered_orange, 30)
+    substat_text_region_bw = screengrabber.upscale_image(substat_text_region_bw, 1.2)
+    substat_roll_region_bw = screengrabber.transform_image_bw(substat_roll_region_filtered_orange, 100)
 
     # get gear info details
     gear_level_region = screengrabber.crop_image_around(screenshot, "gear level")
@@ -52,10 +52,6 @@ while(True):
     gear_level_bw = screengrabber.transform_image_bw(gear_level_region, 175)
 
     cv.imshow('Computer Vision', screenshot)
-    #cv.imshow('CV equip region', equip_region)
-    # cv.imshow('CV substat region', substat_text_region)
-    # cv.imshow('CV substat region filter orange', substat_region_filtered_orange)
-    # cv.imshow('CV substat region grayscale', substat_region_grayscale)
     cv.imshow('CV substat roll region bw', substat_roll_region_bw)
     cv.imshow('CV black and white substat region', substat_text_region_bw)
     cv.imshow('CV gear level region', gear_level_region)
@@ -66,8 +62,8 @@ while(True):
     loop_time = time.time()
 
     # tesseract ocr code
-    substat_text_config = r"-c tessedit_char_whitelist='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ' --psm 6 --oem 3"
-    substat_roll_config = r"-c tessedit_char_whitelist='1234567890%' --psm 6 --oem 3"
+    substat_text_config = r"--psm 6 --oem 3"
+    substat_roll_config = r"-c tessedit_char_whitelist='1234567890%' --psm 6 --oem 0" # tesseract only as LSTM detects 11 as 1
     gear_level_config = r'-c tessedit_char_whitelist=1234567890 --psm 8 --oem 3'
     # custom_config = r'-c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyz --psm 6'
     #equipped_by_text = pytesseract.image_to_string(equip_region, config=substat_text_config, output_type=pytesseract.Output.STRING)
@@ -78,7 +74,7 @@ while(True):
     print(substat_roll)
     gear_level_text = pytesseract.image_to_string(gear_level_bw, config=gear_level_config, output_type=pytesseract.Output.STRING)
     print(gear_level_text)
-    #gearinfo_text = pytesseract.image_to_string()
+
 
     # press 'q' with the output window focused to exit.
     # waits 1 ms every loop to process key presses
@@ -86,7 +82,7 @@ while(True):
         cv.destroyAllWindows()
         break
 
-    #time.sleep(1)
+    time.sleep(0.5)
 
 
 print('Done.')
