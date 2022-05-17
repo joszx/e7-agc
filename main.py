@@ -2,10 +2,10 @@ import cv2 as cv
 import numpy
 import time
 import pytesseract
+import screengrabber
 from windowcapture import WindowCapture
 from ctypes import windll
 from parser import Parser
-from screengrabber import ScreenGrabber
 
 # Constants
 ORANGE_MIN = (5, 100, 50)
@@ -29,59 +29,55 @@ while(True):
     # get an updated image of the game
     screenshot = wincap.get_screenshot()
 
-    #screenshot = cv.rectangle(screenshot, Parser.EQUIPPED_BY_TOP_LEFT, Parser.EQUIPPED_BY_BOT_RIGHT, (0,255,0), 2)
-    screenshot = cv.rectangle(screenshot, ScreenGrabber.SUBSTAT_TOP_LEFT, ScreenGrabber.SUBSTAT_BOT_RIGHT, (255,255,255), 2)
-    screenshot = cv.rectangle(screenshot, ScreenGrabber.GEAR_INFO_TOP_LEFT, ScreenGrabber.GEAR_INFO_BOT_RIGHT, (255,255,255), 2)
+    screenshot = screengrabber.make_rectangle_around(screenshot, "substat text")
+    screenshot = screengrabber.make_rectangle_around(screenshot, "substat roll")
+    #screenshot = screengrabber.make_rectangle_around(screenshot, "gear level")
 
     # crop screenshot image by height then by width, Y then X
-    #equip_region =  screenshot[125:225,875:1100]
-    substat_region = screenshot[ScreenGrabber.SUBSTAT_TOP_LEFT[1]:ScreenGrabber.SUBSTAT_BOT_RIGHT[1], ScreenGrabber.SUBSTAT_TOP_LEFT[0]:ScreenGrabber.SUBSTAT_BOT_RIGHT[0]]
+    substat_text_region = screengrabber.crop_image_around(screenshot, "substat text")
+    substat_roll_region = screengrabber.crop_image_around(screenshot, "substat roll")
 
-    # filter out orange for substat region
-    substat_region_hsv = cv.cvtColor(substat_region, cv.COLOR_BGR2HSV)
-    orange_mask = cv.inRange(substat_region_hsv, ORANGE_MIN, ORANGE_MAX)
-    invert_orange_mask = cv.bitwise_not(orange_mask) # maybe could be replaced with 255 - orange_mask
 
-    substat_region_filtered_orange = cv.bitwise_and(substat_region, substat_region, mask=invert_orange_mask)
+    # filter out orange for substat roll region
+    substat_roll_region_filtered_orange = screengrabber.filter_orange_from_image(substat_roll_region)
 
     # turn substat region bw for tesseract better processing
-    substat_region_grayscale = cv.cvtColor(substat_region_filtered_orange, cv.COLOR_BGR2GRAY)
-    (thresh, substat_region_bw) = cv.threshold(substat_region_grayscale, 30, 255, cv.THRESH_BINARY_INV)
-    #substat_region_bw = cv.resize(substat_region_bw, None, fx=1.2, fy=1.2, interpolation=cv.INTER_CUBIC)
+    substat_text_region_bw = screengrabber.transform_image_bw(substat_text_region, 30)
+    #substat_region_bw = screengrabber.upscale_image(substat_region_bw, 1.2)
+    substat_roll_region_bw = screengrabber.transform_image_bw(substat_roll_region_filtered_orange, 30)
 
     # get gear info details
-    gear_info_region = screenshot[ScreenGrabber.GEAR_INFO_TOP_LEFT[1]:ScreenGrabber.GEAR_INFO_BOT_RIGHT[1], ScreenGrabber.GEAR_INFO_TOP_LEFT[0]:ScreenGrabber.GEAR_INFO_BOT_RIGHT[0]]
-    
-    gear_info_region_hsv = cv.cvtColor(gear_info_region, cv.COLOR_BGR2HSV)
-    gear_info_orange_mask = cv.inRange(gear_info_region_hsv, ORANGE_MIN, ORANGE_MAX)
-    gear_info_invert_orange_mask = cv.bitwise_not(gear_info_orange_mask) # maybe could be replaced with 255 - orange_mask
-    gear_info_filtered_orange = cv.bitwise_and(gear_info_region, gear_info_region, gear_info_invert_orange_mask)
+    gear_level_region = screengrabber.crop_image_around(screenshot, "gear level")
 
-    gear_info_grayscale = cv.cvtColor(gear_info_region, cv.COLOR_BGR2GRAY)
-    (thresh, gear_info_bw) = cv.threshold(gear_info_grayscale, 100, 255, cv.THRESH_BINARY_INV)
+    gear_level_bw = screengrabber.transform_image_bw(gear_level_region, 175)
 
     cv.imshow('Computer Vision', screenshot)
     #cv.imshow('CV equip region', equip_region)
-    # cv.imshow('CV substat region', substat_region)
+    # cv.imshow('CV substat region', substat_text_region)
     # cv.imshow('CV substat region filter orange', substat_region_filtered_orange)
     # cv.imshow('CV substat region grayscale', substat_region_grayscale)
-    cv.imshow('CV black and white substat region', substat_region_bw)
-    cv.imshow('CV gear info region', gear_info_region)
-    cv.imshow('Cv gear info filtered orange', gear_info_orange_mask)
-    cv.imshow('CV gear info grayscale',gear_info_grayscale)
-    cv.imshow('CV gear info bw', gear_info_bw)
+    cv.imshow('CV substat roll region bw', substat_roll_region_bw)
+    cv.imshow('CV black and white substat region', substat_text_region_bw)
+    cv.imshow('CV gear level region', gear_level_region)
+    cv.imshow('CV gear level bw', gear_level_bw)
 
     # debug the loop rate
     print('FPS {}'.format(1 / (time.time() - loop_time)))
     loop_time = time.time()
 
     # tesseract ocr code
-    myconfig = r"--psm 6 --oem 3"
+    substat_text_config = r"-c tessedit_char_whitelist='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ' --psm 6 --oem 3"
+    substat_roll_config = r"-c tessedit_char_whitelist='1234567890%' --psm 6 --oem 3"
+    gear_level_config = r'-c tessedit_char_whitelist=1234567890 --psm 8 --oem 3'
     # custom_config = r'-c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyz --psm 6'
-    #equipped_by_text = pytesseract.image_to_string(equip_region, config=myconfig, output_type=pytesseract.Output.STRING)
+    #equipped_by_text = pytesseract.image_to_string(equip_region, config=substat_text_config, output_type=pytesseract.Output.STRING)
     #print(equipped_by_text)
-    substat_text = pytesseract.image_to_string(substat_region_bw, config=myconfig, output_type=pytesseract.Output.STRING)
+    substat_text = pytesseract.image_to_string(substat_text_region_bw, config=substat_text_config, output_type=pytesseract.Output.STRING)
     print(substat_text)
+    substat_roll = pytesseract.image_to_string(substat_roll_region_bw, config=substat_roll_config, output_type=pytesseract.Output.STRING)
+    print(substat_roll)
+    gear_level_text = pytesseract.image_to_string(gear_level_bw, config=gear_level_config, output_type=pytesseract.Output.STRING)
+    print(gear_level_text)
     #gearinfo_text = pytesseract.image_to_string()
 
     # press 'q' with the output window focused to exit.

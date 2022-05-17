@@ -2,9 +2,9 @@ import cv2 as cv
 import numpy
 import time
 import pytesseract
+import screengrabber
 from windowcapture import WindowCapture
 from ctypes import windll
-from screengrabber import ScreenGrabber
 
 
 # Make program aware of DPI scaling e.g. monitor 1 - 125%, monitor 2 - 100%
@@ -24,14 +24,14 @@ while(True):
     # get an updated image of the game
     screenshot = wincap.get_screenshot()
 
-    #screenshot = cv.rectangle(screenshot, ScreenGrabber.EQUIPPED_BY_TOP_LEFT, ScreenGrabber.EQUIPPED_BY_BOT_RIGHT, (0,255,0), 2)
-    #screenshot = cv.rectangle(screenshot, ScreenGrabber.SUBSTAT_TOP_LEFT, ScreenGrabber.SUBSTAT_BOT_RIGHT, (255,255,255), 3)
-    #screenshot = cv.rectangle(screenshot, ScreenGrabber.GEAR_LEVEL_TOP_LEFT, ScreenGrabber.GEAR_LEVEL_BOT_RIGHT, (255,255,255), 1)
+    #screenshot = cv.rectangle(screenshot, screengrabber.EQUIPPED_BY_TOP_LEFT, screengrabber.EQUIPPED_BY_BOT_RIGHT, (0,255,0), 2)
+    #screenshot = cv.rectangle(screenshot, screengrabber.SUBSTAT_TOP_LEFT, screengrabber.SUBSTAT_BOT_RIGHT, (255,255,255), 3)
+    #screenshot = cv.rectangle(screenshot, screengrabber.GEAR_LEVEL_TOP_LEFT, screengrabber.GEAR_LEVEL_BOT_RIGHT, (255,255,255), 1)
 
     # crop screenshot image by height then by width, Y then X
     #equip_region =  screenshot[125:225,875:1100]
-    #substat_region = screenshot[ScreenGrabber.SUBSTAT_TOP_LEFT[1]:ScreenGrabber.SUBSTAT_BOT_RIGHT[1], ScreenGrabber.SUBSTAT_TOP_LEFT[0]:ScreenGrabber.SUBSTAT_BOT_RIGHT[0]]
-    gear_level_region = screenshot[ScreenGrabber.GEAR_LEVEL_TOP_LEFT[1]:ScreenGrabber.GEAR_LEVEL_BOT_RIGHT[1], ScreenGrabber.GEAR_LEVEL_TOP_LEFT[0]:ScreenGrabber.GEAR_LEVEL_BOT_RIGHT[0]]
+    #substat_region = screenshot[screengrabber.SUBSTAT_TOP_LEFT[1]:screengrabber.SUBSTAT_BOT_RIGHT[1], screengrabber.SUBSTAT_TOP_LEFT[0]:screengrabber.SUBSTAT_BOT_RIGHT[0]]
+    gear_level_region = screenshot[screengrabber.GEAR_LEVEL_TOP_LEFT[1]:screengrabber.GEAR_LEVEL_BOT_RIGHT[1], screengrabber.GEAR_LEVEL_TOP_LEFT[0]:screengrabber.GEAR_LEVEL_BOT_RIGHT[0]]
 
 
     # turn substat region bw for tesseract better processing
@@ -41,7 +41,7 @@ while(True):
 
     gear_level_region_grayscale = cv.cvtColor(gear_level_region, cv.COLOR_BGR2GRAY)
     (thresh, gear_level_region_bw) = cv.threshold(gear_level_region_grayscale, 175, 255, cv.THRESH_BINARY_INV)
-    gear_level_region_bw = cv.resize(gear_level_region_bw, None, fx=1.2, fy=1.2, interpolation=cv.INTER_CUBIC)
+    #gear_level_region_bw = cv.resize(gear_level_region_bw, None, fx=1.2, fy=1.2, interpolation=cv.INTER_CUBIC)
 
     cv.imshow('Computer Vision', screenshot)
     cv.imshow('CV gear level region', gear_level_region)
