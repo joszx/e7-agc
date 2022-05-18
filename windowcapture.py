@@ -92,3 +92,7 @@ class WindowCapture:
     # the __init__ constructor.
     def get_screen_position(self, pos):
         return (pos[0] + self.offset_x, pos[1] + self.offset_y)
+
+
+
+    
