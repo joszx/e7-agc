@@ -15,6 +15,7 @@ class Gear:
         self.gear_score = gear_calc.calc_gear_score(self.substat_list)
         self.gear_score_potential = gear_calc.calc_gear_score_potential(self.gear_level, self.substat_list, self.gear_type, self.num_rolls_list)
 
+
     def __str__(self):
         gear_level_txt = "Gear level: " + str(self.gear_level)
         gear_type_txt = "Gear type: " + str(self.gear_type)
@@ -40,4 +41,4 @@ test_gear9 = Gear("88", "Epic", "15", ["Health Percent", "Attack Percent", "Spee
 test_gear10 = Gear("88", "Epic", "15", ["Health Percent", "Attack Percent", "Speed", "Critical Hit Chance"], ["9", "32", "8", "10"])
 
 
-print(test_gear10)
+print(test_gear7)

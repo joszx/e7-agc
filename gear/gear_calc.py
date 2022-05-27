@@ -9,6 +9,7 @@ HEROIC = 1
 RARE = 2
 LVL85 = 0
 LVL88 = 1
+LVL90 = 2
 
 lvl85_speed_range = ((2,4), (1,4), (1,4)) # epic 5 max but very low chance
 lvl85_cdmg_range = ((4,7), (4,7), (4,6))
@@ -133,7 +134,7 @@ def calc_gear_score(substat_list):
         return total_gear_score
 
         
-def calc_max_gear_score(gear_level, substat_list, gear_type, stat_rolls):
+def calc_minmax_gear_score(gear_level, substat_list, gear_type, stat_rolls, minmax):
 
     total_gear_score = 0
     for i in range(len(substat_list)):
@@ -142,24 +143,27 @@ def calc_max_gear_score(gear_level, substat_list, gear_type, stat_rolls):
         stat_value = stat.value
         curr_roll = stat_rolls[i]
         if substat.is_normal_stat(stat):
-            total_gear_score += range_dict[stat_name][gear_level][gear_type][MAX] * curr_roll
+            total_gear_score += range_dict[stat_name][gear_level][gear_type][minmax] * curr_roll
         elif stat_name == 'Speed':
-            total_gear_score += range_dict[stat_name][gear_level][gear_type][MAX] * (8/4) * curr_roll
+            total_gear_score += range_dict[stat_name][gear_level][gear_type][minmax] * (8/4) * curr_roll
         elif stat_name == 'Critical Hit Damage':
-            total_gear_score += range_dict[stat_name][gear_level][gear_type][MAX] * (8/7) * curr_roll
+            total_gear_score += range_dict[stat_name][gear_level][gear_type][minmax] * (8/7) * curr_roll
         elif stat_name == 'Critical Hit Chance':
-            total_gear_score += range_dict[stat_name][gear_level][gear_type][MAX] * (8/5) * curr_roll
+            total_gear_score += range_dict[stat_name][gear_level][gear_type][minmax] * (8/5) * curr_roll
         elif stat_name == 'Attack Flat':
-            total_gear_score += range_dict[stat_name][gear_level][gear_type][MAX] * (3.46/39) * curr_roll
+            total_gear_score += range_dict[stat_name][gear_level][gear_type][minmax] * (3.46/39) * curr_roll
         elif stat_name == 'Defense Flat':
-            total_gear_score += range_dict[stat_name][gear_level][gear_type][MAX] * (4.99/31) * curr_roll
+            total_gear_score += range_dict[stat_name][gear_level][gear_type][minmax] * (4.99/31) * curr_roll
         elif stat_name == 'Health Flat':
-            total_gear_score += range_dict[stat_name][gear_level][gear_type][MAX] * (3.09/174) * curr_roll
+            total_gear_score += range_dict[stat_name][gear_level][gear_type][minmax] * (3.09/174) * curr_roll
     
     return total_gear_score
 
 def calc_gear_score_potential(gear_level, substat_list, gear_type, stat_rolls):
-    return (calc_gear_score(substat_list)/calc_max_gear_score(gear_level, substat_list, gear_type, stat_rolls)) * 100
+    min_gear_score = calc_minmax_gear_score(gear_level, substat_list, gear_type, stat_rolls, MIN)
+    max_gear_score = calc_minmax_gear_score(gear_level, substat_list, gear_type, stat_rolls, MAX)
+    curr_gear_score = calc_gear_score(substat_list)
+    return ((curr_gear_score - min_gear_score)/(max_gear_score - min_gear_score)) * 100
 
 
 def get_gear_type(gear_type):
@@ -175,5 +179,7 @@ def get_gear_level(gear_level):
         return LVL85
     elif gear_level == '88':
         return LVL88
+    elif gear_level == '90':
+        return LVL90
     else:
         print('Error gear level not supported')
