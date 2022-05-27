@@ -51,6 +51,18 @@ avg_dict = {"Speed": (3,3.5),
               "Defense Flat": (31,36),
               "Health Flat": (174,203)}
 
+reforge_dict = {"Speed": (0,1,2,3,4,4), 
+              "Critical Hit Damage": (1,2,3,4,6,7), 
+              "Critical Hit Chance": (1,2,3,4,5,6),
+              "Attack Percent": (1,3,4,5,7,8),
+              "Defense Percent": (1,3,4,5,7,8),
+              "Effectiveness": (1,3,4,5,7,8),
+              "Effect Resistance": (1,3,4,5,7,8),
+              "Health Percent": (1,3,4,5,7,8),
+              "Attack Flat": (11,22,33,44,55,66),
+              "Defense Flat": (9,18,27,36,45,54),
+              "Health Flat": (56,112,168,224,280,336)}
+
 
 
 def calc_num_gear_rolls(gear_level, gear_type, enhance_level, substat_list):
@@ -164,6 +176,17 @@ def calc_gear_score_potential(gear_level, substat_list, gear_type, stat_rolls):
     max_gear_score = calc_minmax_gear_score(gear_level, substat_list, gear_type, stat_rolls, MAX)
     curr_gear_score = calc_gear_score(substat_list)
     return ((curr_gear_score - min_gear_score)/(max_gear_score - min_gear_score)) * 100
+
+
+def calc_reforge_stats(substat_list, num_rolls_list):
+    reforge_substat_list = []
+    for i in range(len(substat_list)):
+        stat = substat_list[i]
+        rolls = num_rolls_list[i]
+        reforge_increment = reforge_dict[stat.name][rolls - 1]
+        reforge_substat_list.append(substat.Substat(stat.name, stat.value + reforge_increment))
+    
+    return reforge_substat_list
 
 
 def get_gear_type(gear_type):
