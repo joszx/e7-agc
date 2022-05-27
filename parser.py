@@ -1,9 +1,8 @@
 
+def str_to_list(string):
+    return list(filter(bool, [str.strip() for str in string.splitlines()]))
 
-class Parser:
 
-    # constructor
-    def __init__(self):
-        pass
 
-    
+string = "Health\nAttack\n\nSpeed\nEffectiveness\n"
+

@@ -3,7 +3,7 @@ import gear_calc
 
 class Gear:
     def __init__(self, gear_type, enhance_level, substat_name_list, substat_value_list):
-        self.gear_type = gear_type
+        self.gear_type = gear_calc.get_gear_type(gear_type)
         self.enhance_level = int(enhance_level)
         self.substat_list = []
         for i in range(len(substat_name_list)): 
@@ -15,7 +15,7 @@ class Gear:
         self.gear_score_potential = gear_calc.calc_gear_score_potential(self.substat_list, self.gear_type, self.num_rolls_list)
 
     def __str__(self):
-        gear_type_txt = "Gear type: " + self.gear_type
+        gear_type_txt = "Gear type: " + str(self.gear_type)
         gear_enhance_lvl_txt = "Gear enhance lvl: " + str(self.enhance_level)
         gear_substat_txt = ""
         for i in range(len(self.substat_list)):

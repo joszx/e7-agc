@@ -56,11 +56,11 @@ def calc_num_gear_rolls(gear_type, enhance_level, substat_list):
     sum_min_rolls = sum(num_rolls_list)
 
     num_starting_rolls = 0
-    if gear_type == 'Epic':
+    if gear_type == EPIC:
         num_starting_rolls = 4
-    elif gear_type == 'Heroic':
+    elif gear_type == HEROIC:
         num_starting_rolls = 3
-    elif gear_type == 'Rare':
+    elif gear_type == RARE:
         num_starting_rolls = 2
     else:
         print('Gear type not expected')
@@ -90,10 +90,10 @@ def calc_num_gear_rolls(gear_type, enhance_level, substat_list):
 
 
 def calc_max_rolls(substat, gear_type):
-    return math.floor(int(substat.value)/int(lvl85_range_dict[substat.name][get_gear_type(gear_type)][MIN]))
+    return math.floor(int(substat.value)/int(lvl85_range_dict[substat.name][gear_type][MIN]))
     
 def calc_min_rolls(substat, gear_type):
-    return math.ceil(int(substat.value)/int(lvl85_range_dict[substat.name][get_gear_type(gear_type)][MAX]))
+    return math.ceil(int(substat.value)/int(lvl85_range_dict[substat.name][gear_type][MAX]))
 
 def calc_scaled_diff(substat, avg_roll, num_rolls):
     return (float(substat.value) - float(avg_roll) * float(num_rolls))/float(avg_roll)
@@ -125,8 +125,6 @@ def calc_gear_score(substat_list):
         
 def calc_max_gear_score(substat_list, gear_type, stat_rolls):
 
-    curr_gear_type = get_gear_type(gear_type)
-
     total_gear_score = 0
     for i in range(len(substat_list)):
         stat = substat_list[i]
@@ -134,19 +132,19 @@ def calc_max_gear_score(substat_list, gear_type, stat_rolls):
         stat_value = stat.value
         curr_roll = stat_rolls[i]
         if substat.is_normal_stat(stat):
-            total_gear_score += lvl85_eff_range[curr_gear_type][MAX] * curr_roll
+            total_gear_score += lvl85_eff_range[gear_type][MAX] * curr_roll
         elif stat_name == 'Speed':
-            total_gear_score += lvl85_speed_range[curr_gear_type][MAX] * (8/4) * curr_roll
+            total_gear_score += lvl85_speed_range[gear_type][MAX] * (8/4) * curr_roll
         elif stat_name == 'Critical Hit Damage':
-            total_gear_score += lvl85_cdmg_range[curr_gear_type][MAX] * (8/7) * curr_roll
+            total_gear_score += lvl85_cdmg_range[gear_type][MAX] * (8/7) * curr_roll
         elif stat_name == 'Critical Hit Chance':
-            total_gear_score += lvl85_cchance_range[curr_gear_type][MAX] * (8/5) * curr_roll
+            total_gear_score += lvl85_cchance_range[gear_type][MAX] * (8/5) * curr_roll
         elif stat_name == 'Attack Flat':
-            total_gear_score += lvl85_atkflat_range[curr_gear_type][MAX] * (3.46/39) * curr_roll
+            total_gear_score += lvl85_atkflat_range[gear_type][MAX] * (3.46/39) * curr_roll
         elif stat_name == 'Defense Flat':
-            total_gear_score += lvl85_defflat_range[curr_gear_type][MAX] * (4.99/31) * curr_roll
+            total_gear_score += lvl85_defflat_range[gear_type][MAX] * (4.99/31) * curr_roll
         elif stat_name == 'Health Flat':
-            total_gear_score += lvl85_hpflat_range[curr_gear_type][MAX] * (3.09/174) * curr_roll
+            total_gear_score += lvl85_hpflat_range[gear_type][MAX] * (3.09/174) * curr_roll
     
     return total_gear_score
 

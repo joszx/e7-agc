@@ -5,7 +5,6 @@ import pytesseract
 import screengrabber
 from windowcapture import WindowCapture
 from ctypes import windll
-from parser import Parser
 
 # Constants
 ORANGE_MIN = (5, 100, 50)
