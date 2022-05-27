@@ -2,7 +2,7 @@
 import math
 
 speed_range = (2,4) # 5 max but very low chance
-cdmg_range = (3,7)
+cdmg_range = (4,7)
 cchance_range = (3,5)
 atkper_range = defper_range = eff_range = effres_range = hpper_range = (4,8)
 atkflat_range = (33,46)
@@ -36,11 +36,6 @@ avg_dict = {"Speed": 3,
               "Defense Flat": 31,
               "Health Flat": 174}
 
-
-stat1 = 6
-stat2 = 6
-stat3 = 6
-stat4 = 6
 
 testinput1_substat_names = ["Attack Percent", "Defense Percent", "Health Percent", "Effectiveness"]
 testinput1_substat_rolls = ["8", "6", "5", "36"]
@@ -153,4 +148,4 @@ def calc_scaled_diff(substat_roll, avg_roll, num_rolls):
 
 
 
-calc_num_rolls(testinput8_substat_names, testinput8_substat_rolls)
+calc_num_rolls(testinput2_substat_names, testinput2_substat_rolls)
