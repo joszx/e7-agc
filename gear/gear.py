@@ -11,9 +11,10 @@ class Gear:
             curr_substat_name = substat_name_list[i]
             curr_substat_value = int(substat_value_list[i])
             self.substat_list.append(Substat(curr_substat_name, curr_substat_value))
-        self.num_rolls_list = gear_calc.calc_num_gear_rolls(self.gear_level, self.gear_type, self.enhance_level, self.substat_list)
+        if self.gear_level != gear_calc.LVL90:
+            self.num_rolls_list = gear_calc.calc_num_gear_rolls(self.gear_level, self.gear_type, self.enhance_level, self.substat_list)
+            self.gear_score_potential = gear_calc.calc_gear_score_potential(self.gear_level, self.substat_list, self.gear_type, self.num_rolls_list)
         self.gear_score = gear_calc.calc_gear_score(self.substat_list)
-        self.gear_score_potential = gear_calc.calc_gear_score_potential(self.gear_level, self.substat_list, self.gear_type, self.num_rolls_list)
         if self.gear_level != gear_calc.LVL85:
             self.reforge_substat_list = []
             self.reforge_gear_score = 0
@@ -27,14 +28,18 @@ class Gear:
         gear_enhance_lvl_txt = "Gear enhance lvl: " + str(self.enhance_level)
         gear_substat_txt = ""
         reforge_gear_substat_txt = ""
+        gear_score_potential_txt = ""
+        reforge_gear_score_txt = ""
         for i in range(len(self.substat_list)):
             substat = self.substat_list[i]
-            reforge_substat = self.reforge_substat_list[i]
-            gear_substat_txt += "Substat: {0} - {1}, rolled {2} times\n".format(substat.name, substat.value, self.num_rolls_list[i])
-            reforge_gear_substat_txt += "Substat: {0} - {1}, rolled {2} times\n".format(reforge_substat.name, reforge_substat.value, self.num_rolls_list[i])
+            if self.gear_level != gear_calc.LVL90:
+                gear_substat_txt += "Substat: {0} - {1}, rolled {2} times\n".format(substat.name, substat.value, self.num_rolls_list[i])
+                gear_score_potential_txt = "Gear score potential: " + str(self.gear_score_potential)
+            if self.gear_level == gear_calc.LVL85:
+                reforge_substat = self.reforge_substat_list[i]
+                reforge_gear_substat_txt += "Substat: {0} - {1}, rolled {2} times\n".format(reforge_substat.name, reforge_substat.value, self.num_rolls_list[i])
+                reforge_gear_score_txt = "Reforged gear score: " + str(self.reforge_gear_score)
         gear_score_txt = "Gear score: " + str(self.gear_score)
-        gear_score_potential_txt = "Gear score potential: " + str(self.gear_score_potential)
-        reforge_gear_score_txt = "Reforged gear score: " + str(self.reforge_gear_score)
         return  "{0} \n{1} \n{2} \n{3} \n{4} \n{5} \n{6} \n{7}".format(gear_level_txt, gear_type_txt, gear_enhance_lvl_txt, gear_substat_txt, gear_score_txt, gear_score_potential_txt, reforge_gear_substat_txt, reforge_gear_score_txt)
     
 
@@ -49,6 +54,8 @@ test_gear8 = Gear("85", "Heroic", "15", ["Defense Percent", "Speed", "Critical H
 test_gear9 = Gear("88", "Epic", "15", ["Health Percent", "Attack Percent", "Speed", "Effectiveness"], ["26", "9", "8", "21"])
 test_gear10 = Gear("88", "Epic", "15", ["Health Percent", "Attack Percent", "Speed", "Critical Hit Chance"], ["9", "32", "8", "10"])
 test_gear11 = Gear("85", "Heroic", "15", ["Attack Flat", "Critical Hit Damage", "Speed", "Effectiveness"], ["70", "10", "10", "5"])
+weis_gear = Gear("88", "Epic", "15", ["Health Percent", "Speed", "Critical Hit Chance", "Effectiveness"], ["10", "9", "9", "13"])
+weis_gear2 = Gear("88", "Epic", "15", ["Defense Percent", "Speed", "Effect Resistance", "Attack Flat"], ["14", "11", "22", "40"])
+test_gear12 = Gear("90", "Epic", "15", ["Defense Percent", "Speed", "Effect Resistance", "Attack Flat"], ["14", "11", "22", "40"])
 
-
-print(test_gear7)
+print(test_gear12)
