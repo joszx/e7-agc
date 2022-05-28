@@ -1,4 +1,4 @@
-import substat
+import gear.substat as substat
 import math
 
 # Constants

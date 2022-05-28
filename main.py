@@ -2,6 +2,8 @@ import cv2 as cv
 import time
 import pytesseract
 import screengrabber
+import parser
+from gear.gear import Gear
 from windowcapture import WindowCapture
 from ctypes import windll
 
@@ -78,15 +80,26 @@ while(True):
     #equipped_by_text = pytesseract.image_to_string(equip_region, config=substat_text_config, output_type=pytesseract.Output.STRING)
     #print(equipped_by_text)
     substat_text = pytesseract.image_to_string(substat_text_region_bw, config=substat_text_config, output_type=pytesseract.Output.STRING)
-    print(substat_text)
+    # print(substat_text)
     substat_roll = pytesseract.image_to_string(substat_roll_region_bw, config=substat_roll_config, output_type=pytesseract.Output.STRING)
-    print(substat_roll)
+    # print(substat_roll)
     gear_level_text = pytesseract.image_to_string(gear_level_bw, config=gear_level_config, output_type=pytesseract.Output.STRING)
-    print(gear_level_text)
+    # print(gear_level_text)
     gear_enhance_text = pytesseract.image_to_string(gear_enhance_bw, config=gear_enhance_config, output_type=pytesseract.Output.STRING)
-    print(gear_enhance_text)
+    # print(gear_enhance_text)
     gear_type_text = pytesseract.image_to_string(gear_type_bw, config=gear_type_config, output_type=pytesseract.Output.STRING)
-    print(gear_type_text)
+    # print(gear_type_text)
+
+    gear_level = parser.remove_newline(gear_level_text)
+    gear_type = parser.parse_gear_type(parser.remove_newline(gear_type_text))
+    gear_enhance_level = parser.parse_gear_enhance_level(parser.remove_newline(gear_enhance_text))
+    substat_text = parser.str_to_list(substat_text)
+    substat_roll = parser.str_to_list(substat_roll)
+    substat_text, substat_roll = parser.parse_substats(substat_text, substat_roll)
+
+    curr_gear = Gear(gear_level, gear_type, gear_enhance_level, substat_text, substat_roll)
+
+    print(curr_gear)
 
     # press 'q' with the output window focused to exit.
     # waits 1 ms every loop to process key presses
