@@ -46,10 +46,10 @@ def parse_gear_enhance_level(gear_enhance_level):
         return 0
 
 
-string = "Health\nAttack\n\nSpeed &\nEffectiveness\n"
+# string = "Health\nAttack\n\nSpeed &\nEffectiveness\n"
 
-string_list = str_to_list(string) 
+# string_list = str_to_list(string) 
 
-remove_substat_modification(string_list)
+# remove_substat_modification(string_list)
 
-print(string_list)
+# print(string_list)

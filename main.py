@@ -3,13 +3,10 @@ import time
 import pytesseract
 import screengrabber
 import parser
+from edgedetector import EdgeDetector
 from gear.gear import Gear
 from windowcapture import WindowCapture
 from ctypes import windll
-
-# Constants
-ORANGE_MIN = (5, 100, 50)
-ORANGE_MAX = (15, 255, 255)
 
 
 # Make program aware of DPI scaling e.g. monitor 1 - 125%, monitor 2 - 100%
@@ -22,6 +19,8 @@ user32.SetProcessDPIAware()
 
 # initialize the WindowCapture class
 wincap = WindowCapture('LDPlayer')
+
+enhance_page_detector = EdgeDetector()
 
 loop_time = time.time()
 while(True):
@@ -43,8 +42,14 @@ while(True):
     cv.imshow('Enhance equipment bw', enhance_equipment_bw)
 
     if enhance_equipment_text == 'Enhance Equipment' or enhance_equipment_text == 'Substat Modification':
-        
+        enhance_page_detector.update_value(True)
+    else:
+        enhance_page_detector.update_value(False)
 
+    time.sleep(0.5)
+
+    if enhance_page_detector.check_edge():
+        
 
         screenshot = screengrabber.make_rectangle_around(screenshot, "substat text")
         screenshot = screengrabber.make_rectangle_around(screenshot, "substat roll")
