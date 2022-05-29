@@ -8,7 +8,7 @@ def str_to_list(string):
 def remove_substat_modification(substat_name_list):
     for i in range(len(substat_name_list)):
         substat_name = substat_name_list[i]
-        if not substat_name.isalpha():
+        if not all(chr.isalpha() or chr.isspace() for chr in substat_name):
             substat_name = substat_name.rsplit(' ',1)[0]
             if not substat_name.isalpha():
                 print('Error with substat modification')
