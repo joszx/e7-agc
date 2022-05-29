@@ -38,6 +38,7 @@ rect_dict = {
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
+GREEN = (102,255,0)
 ORANGE_MIN = (5, 100, 50)
 ORANGE_MAX = (15, 255, 255)
 

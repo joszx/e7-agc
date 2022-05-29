@@ -46,6 +46,7 @@ while(True):
     else:
         enhance_page_detector.update_value(False)
 
+    # time delay for page to load after detecting enhance equipment page
     time.sleep(0.5)
 
     if enhance_page_detector.check_edge():
