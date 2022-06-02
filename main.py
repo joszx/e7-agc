@@ -46,11 +46,14 @@ while(True):
     else:
         enhance_page_detector.update_value(False)
 
-    # time delay for page to load after detecting enhance equipment page
-    time.sleep(0.5)
 
     if enhance_page_detector.check_edge():
+
+        # time delay for page to load after detecting enhance equipment page
+        time.sleep(0.5)
         
+        # renew screenshot to wait after enhance equipment page loads
+        screenshot = wincap.get_screenshot()
 
         screenshot = screengrabber.make_rectangle_around(screenshot, "substat text")
         screenshot = screengrabber.make_rectangle_around(screenshot, "substat roll")
@@ -118,7 +121,10 @@ while(True):
         gear_type = parser.parse_gear_type(parser.remove_newline(gear_type_text))
         gear_enhance_level = parser.parse_gear_enhance_level(parser.remove_newline(gear_enhance_text))
         substat_text = parser.str_to_list(substat_text)
+        print(substat_text)
+        print(substat_roll)
         substat_roll = parser.str_to_list(substat_roll)
+        print(substat_roll)
         substat_text, substat_roll = parser.parse_substats(substat_text, substat_roll)
 
         curr_gear = Gear(gear_level, gear_type, gear_enhance_level, substat_text, substat_roll)

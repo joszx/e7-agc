@@ -40,10 +40,16 @@ def parse_gear_type(gear_type):
     return gear_type.split()[0]
 
 def parse_gear_enhance_level(gear_enhance_level):
-    if gear_enhance_level.isnumeric() and gear_enhance_level in range(1,16):
-        return int(gear_enhance_level)
-    else:
+    if gear_enhance_level.isnumeric():
+        gear_enhance_level = int(gear_enhance_level)
+        if gear_enhance_level in range(1,16):
+            return gear_enhance_level
+        else:
+            return 0
+    elif gear_enhance_level == "":
         return 0
+    else:
+        print("Error in parse gear enhance level")
 
 
 # string = "Health\nAttack\n\nSpeed &\nEffectiveness\n"

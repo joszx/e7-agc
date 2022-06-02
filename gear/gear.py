@@ -5,7 +5,7 @@ class Gear:
     def __init__(self, gear_level, gear_type, enhance_level, substat_name_list, substat_value_list):
         self.gear_level = gear_calc.get_gear_level(gear_level)
         self.gear_type = gear_calc.get_gear_type(gear_type)
-        self.enhance_level = int(enhance_level)
+        self.enhance_level = enhance_level
         self.substat_list = []
         for i in range(len(substat_name_list)): 
             curr_substat_name = substat_name_list[i]
