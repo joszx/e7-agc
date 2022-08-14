@@ -5,12 +5,13 @@ def str_to_list(string):
     return list(filter(bool, [str.strip() for str in string.splitlines()]))
 
 # modifies given list to remove substat modification from substat names
+# TODO: apply different roll calculation to modified substats
 def remove_substat_modification(substat_name_list):
     for i in range(len(substat_name_list)):
         substat_name = substat_name_list[i]
         if not all(chr.isalpha() or chr.isspace() for chr in substat_name):
-            substat_name = substat_name.rsplit(' ',1)[0]
-            if not substat_name.isalpha():
+            substat_name_list[i] = substat_name_list[i].rsplit(' ',1)[0]
+            if not substat_name_list[i].isalpha():
                 print('Error with substat modification')
             else:
                 substat_name_list[i] = substat_name
