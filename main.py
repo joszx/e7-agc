@@ -1,6 +1,7 @@
 import cv2 as cv
 import time
 import pytesseract
+from myexception import MyException
 import screengrabber
 import parser
 from edgedetector import EdgeDetector
@@ -128,23 +129,28 @@ class logic:
                 # print(gear_enhance_text)
                 gear_type_text = pytesseract.image_to_string(gear_type_bw, config=gear_type_config, output_type=pytesseract.Output.STRING)
                 # print(gear_type_text)
+                
+                try:
+                    gear_level = parser.remove_newline(gear_level_text)
+                    gear_type = parser.parse_gear_type(parser.remove_newline(gear_type_text))
+                    gear_enhance_level = parser.parse_gear_enhance_level(parser.remove_newline(gear_enhance_text))
+                    substat_text = parser.str_to_list(substat_text)
+                    print(substat_text)
+                    print(substat_roll)
+                    substat_roll = parser.str_to_list(substat_roll)
+                    print(substat_roll)
+                    substat_text, substat_roll = parser.parse_substats(substat_text, substat_roll)
 
-                gear_level = parser.remove_newline(gear_level_text)
-                gear_type = parser.parse_gear_type(parser.remove_newline(gear_type_text))
-                gear_enhance_level = parser.parse_gear_enhance_level(parser.remove_newline(gear_enhance_text))
-                substat_text = parser.str_to_list(substat_text)
-                print(substat_text)
-                print(substat_roll)
-                substat_roll = parser.str_to_list(substat_roll)
-                print(substat_roll)
-                substat_text, substat_roll = parser.parse_substats(substat_text, substat_roll)
-
-                try: 
                     curr_gear = Gear(gear_level, gear_type, gear_enhance_level, substat_text, substat_roll)
                     print(curr_gear)
                     out = curr_gear
+
+                except MyException as e:
+                    details = e.args[0]
+                    out = "Error parsing gear\n" + details
                 except:
                     out = "Error initialising gear"
+
 
                 outputstring.set(out)
 
