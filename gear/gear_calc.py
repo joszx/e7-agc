@@ -1,6 +1,8 @@
 import gear.substat as substat
 import math
 
+from myexception import GearLevelException
+
 # Constants
 MIN = 0
 MAX = 1
@@ -205,4 +207,4 @@ def get_gear_level(gear_level):
     elif gear_level == '90':
         return LVL90
     else:
-        print('Error gear level not supported')
+        raise GearLevelException("Error gear level not supported")

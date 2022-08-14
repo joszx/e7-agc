@@ -1,7 +1,7 @@
 import cv2 as cv
 import time
 import pytesseract
-from myexception import MyException
+from myexception import GearParseException, GearLevelException
 import screengrabber
 import parser
 from edgedetector import EdgeDetector
@@ -145,9 +145,12 @@ class logic:
                     print(curr_gear)
                     out = curr_gear
 
-                except MyException as e:
+                except GearParseException as e:
                     details = e.args[0]
                     out = "Error parsing gear\n" + details
+                except GearLevelException as e:
+                    details = e.args[0]
+                    out = details
                 except:
                     out = "Error initialising gear"
 

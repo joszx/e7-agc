@@ -1,5 +1,5 @@
 import gear.substat as substat
-from myexception import MyException
+from myexception import GearParseException, MyException
 
 # trim front and back spaces, removes empty strings, parses to list format
 def str_to_list(string):
@@ -21,7 +21,7 @@ def parse_substats(substat_name_list, substat_value_list):
     remove_substat_modification(substat_name_list)
 
     if len(substat_name_list) != len(substat_value_list):
-        raise MyException("number of substat names =/= number of substat values")
+        raise GearParseException("number of substat names =/= number of substat values")
 
     for i in range(len(substat_name_list)):
         curr_substat_name = substat_name_list[i]
