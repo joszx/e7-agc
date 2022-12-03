@@ -25,6 +25,9 @@ class logic:
         
         self.initDPIAware()
 
+        # set tesseract path
+        pytesseract.pytesseract.tesseract_cmd = r'./tesseract/tesseract.exe'
+
         # Get list of all opened windows
         # WindowCapture.list_window_names()
         # exit()
@@ -51,8 +54,8 @@ class logic:
 
             # print(enhance_equipment_text)
 
-            cv.imshow('Enhance equipment region', enhance_equipment_region)
-            cv.imshow('Enhance equipment bw', enhance_equipment_bw)
+            # cv.imshow('Enhance equipment region', enhance_equipment_region)
+            # cv.imshow('Enhance equipment bw', enhance_equipment_bw)
 
             if enhance_equipment_text == 'Enhance Equipment' or enhance_equipment_text == 'Substat Modification':
                 enhance_page_detector.update_value(True)
@@ -93,22 +96,22 @@ class logic:
                 gear_enhance_region = screengrabber.crop_image_around(screenshot, "gear enhance")
                 gear_type_region = screengrabber.crop_image_around(screenshot, "gear type")
 
-                gear_level_bw = screengrabber.transform_image_bw(gear_level_region, 175)
+                gear_level_bw = screengrabber.transform_image_bw(gear_level_region, 150)
                 gear_enhance_bw = screengrabber.transform_image_bw(gear_enhance_region, 200)
                 gear_type_bw = screengrabber.transform_image_bw(gear_type_region, 30)
 
 
 
-                cv.imshow('Computer Vision', screenshot)
-                cv.imshow('CV substat roll region bw', substat_roll_region_bw)
-                cv.imshow('CV black and white substat region', substat_text_region_bw)
-                cv.imshow('CV gear level bw', gear_level_bw)
-                cv.imshow('CV gear enhance bw', gear_enhance_bw)
-                cv.imshow('CV gear type', gear_type_bw)
+                # cv.imshow('Computer Vision', screenshot)
+                # cv.imshow('CV substat roll region bw', substat_roll_region_bw)
+                # cv.imshow('CV black and white substat region', substat_text_region_bw)
+                # cv.imshow('CV gear level bw', gear_level_bw)
+                # cv.imshow('CV gear enhance bw', gear_enhance_bw)
+                # cv.imshow('CV gear type', gear_type_bw)
 
                 # debug the loop rate
-                print('FPS {}'.format(1 / (time.time() - loop_time)))
-                loop_time = time.time()
+                # print('FPS {}'.format(1 / (time.time() - loop_time)))
+                # loop_time = time.time()
 
                 # tesseract ocr code
                 substat_text_config = r"--psm 6 --oem 3"
@@ -124,7 +127,7 @@ class logic:
                 substat_roll = pytesseract.image_to_string(substat_roll_region_bw, config=substat_roll_config, output_type=pytesseract.Output.STRING)
                 # print(substat_roll)
                 gear_level_text = pytesseract.image_to_string(gear_level_bw, config=gear_level_config, output_type=pytesseract.Output.STRING)
-                # print(gear_level_text)
+                print(gear_level_text)
                 gear_enhance_text = pytesseract.image_to_string(gear_enhance_bw, config=gear_enhance_config, output_type=pytesseract.Output.STRING)
                 # print(gear_enhance_text)
                 gear_type_text = pytesseract.image_to_string(gear_type_bw, config=gear_type_config, output_type=pytesseract.Output.STRING)
