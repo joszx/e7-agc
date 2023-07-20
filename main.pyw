@@ -33,7 +33,8 @@ class logic:
         # exit()
 
         # initialize the WindowCapture class
-        wincap = WindowCapture('LDPlayer')
+        # wincap = WindowCapture('LDPlayer')
+        wincap = WindowCapture('BlueStacks App Player')
 
         # initialize the edge detector class to detect entering into the enhance page
         enhance_page_detector = EdgeDetector()
