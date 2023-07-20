@@ -118,9 +118,9 @@ class logic:
                 # tesseract ocr code
                 substat_text_config = r"--psm 6 --oem 3"
                 substat_roll_config = r"-c tessedit_char_whitelist='1234567890%' --psm 6 --oem 3" # LSTM detects 11 as 1 while tesseract detects % as 0 0
-                gear_level_config = r'-c tessedit_char_whitelist=1234567890 --psm 8 --oem 3'
-                gear_enhance_config = r"-c tessedit_char_whitelist='1234567890' --psm 8 --oem 3"
-                gear_type_config = r"-c tessedit_char_whitelist='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ' --psm 7 --oem 3"
+                gear_level_config = r'-c tessedit_char_whitelist=1234567890 --psm 11 --oem 3'
+                gear_enhance_config = r"-c tessedit_char_whitelist='1234567890+' --psm 11 --oem 3"
+                gear_type_config = r"-c tessedit_char_whitelist='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ' --psm 11 --oem 3"
                 # custom_config = r'-c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyz --psm 6'
                 #equipped_by_text = pytesseract.image_to_string(equip_region, config=substat_text_config, output_type=pytesseract.Output.STRING)
                 #print(equipped_by_text)
