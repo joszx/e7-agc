@@ -74,6 +74,16 @@ def filter_orange_from_image(image):
 
     return cv2.bitwise_and(image, image, mask=invert_orange_mask)
 
+def filter_for_color(image):
+    image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    color = np.uint8([[[127,220,255]]])
+    hsvColor = np.uint8([[[29,187,168]]])
+    lowerLimit = hsvColor[0][0][0] - (7, 30, 10)
+    upperLimit = hsvColor[0][0][0] + (10, 255, 255)
+    image_filtered_for_color = cv2.inRange(image_hsv, lowerLimit, upperLimit)
+
+    return cv2.bitwise_and(image, image, mask=image_filtered_for_color)
+
 def transform_image_bw(image, threshold):
     image_grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     (thresh, image_bw) = cv2.threshold(image_grayscale, threshold, 255, cv2.THRESH_BINARY_INV)

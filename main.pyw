@@ -3,7 +3,7 @@ import time
 import pytesseract
 from myexception import GearParseException, GearLevelException
 import screengrabber
-import parser
+import gearparser
 from edgedetector import EdgeDetector
 from gear.gear import Gear
 from windowcapture import WindowCapture
@@ -51,7 +51,7 @@ class logic:
             enhance_equipment_bw = screengrabber.transform_image_bw(enhance_equipment_region, 50)
             enhance_equipment_config = r"-c tessedit_char_whitelist='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ' --psm 6 --oem 3 "
             enhance_equipment_text = pytesseract.image_to_string(enhance_equipment_bw, config=enhance_equipment_config, output_type=pytesseract.Output.STRING)
-            enhance_equipment_text = parser.remove_newline(enhance_equipment_text)
+            enhance_equipment_text = gearparser.remove_newline(enhance_equipment_text)
 
             # print(enhance_equipment_text)
 
@@ -97,7 +97,8 @@ class logic:
                 gear_enhance_region = screengrabber.crop_image_around(screenshot, "gear enhance")
                 gear_type_region = screengrabber.crop_image_around(screenshot, "gear type")
 
-                gear_level_bw = screengrabber.transform_image_bw(gear_level_region, 150)
+                gear_level_bw = screengrabber.filter_for_color(gear_level_region)
+                gear_level_bw = screengrabber.transform_image_bw(gear_level_bw, 150)
                 gear_enhance_bw = screengrabber.transform_image_bw(gear_enhance_region, 200)
                 gear_type_bw = screengrabber.transform_image_bw(gear_type_region, 30)
 
@@ -135,15 +136,15 @@ class logic:
                 # print(gear_type_text)
                 
                 try:
-                    gear_level = parser.remove_newline(gear_level_text)
-                    gear_type = parser.parse_gear_type(parser.remove_newline(gear_type_text))
-                    gear_enhance_level = parser.parse_gear_enhance_level(parser.remove_newline(gear_enhance_text))
-                    substat_text = parser.str_to_list(substat_text)
+                    gear_level = gearparser.remove_newline(gear_level_text)
+                    gear_type = gearparser.parse_gear_type(gearparser.remove_newline(gear_type_text))
+                    gear_enhance_level = gearparser.parse_gear_enhance_level(gearparser.remove_newline(gearparser.remove_plussign(gear_enhance_text)))
+                    substat_text = gearparser.str_to_list(substat_text)
                     print(substat_text)
                     print(substat_roll)
-                    substat_roll = parser.str_to_list(substat_roll)
+                    substat_roll = gearparser.str_to_list(substat_roll)
                     print(substat_roll)
-                    substat_text, substat_roll = parser.parse_substats(substat_text, substat_roll)
+                    substat_text, substat_roll = gearparser.parse_substats(substat_text, substat_roll)
 
                     curr_gear = Gear(gear_level, gear_type, gear_enhance_level, substat_text, substat_roll)
                     print(curr_gear)
@@ -170,7 +171,11 @@ class logic:
             time.sleep(0.5)
 
 
+# Create window object
 window = tk.Tk()
+
+window.title('e7-agc')
+window.geometry('600x400')
 
 frame = tk.Frame()
 frame.pack()
@@ -196,5 +201,5 @@ output.pack(side=tk.BOTTOM)
 t1 = threading.Thread(target=logic, daemon=True)
 t1.start()
 
-
+# Start program
 window.mainloop()
