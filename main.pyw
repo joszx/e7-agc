@@ -77,9 +77,9 @@ class logic:
 
                 screenshot = screengrabber.make_rectangle_around(screenshot, "substat text")
                 screenshot = screengrabber.make_rectangle_around(screenshot, "substat roll")
-                #screenshot = screengrabber.make_rectangle_around(screenshot, "gear level")
-                #screenshot = screengrabber.make_rectangle_around(screenshot, "gear enhance")
-                #screenshot = screengrabber.make_rectangle_around(screenshot, "gear type")
+                screenshot = screengrabber.make_rectangle_around(screenshot, "gear level")
+                screenshot = screengrabber.make_rectangle_around(screenshot, "gear enhance")
+                screenshot = screengrabber.make_rectangle_around(screenshot, "gear type")
 
                 # crop screenshot image by height then by width, Y then X
                 substat_text_region = screengrabber.crop_image_around(screenshot, "substat text")
@@ -132,11 +132,11 @@ class logic:
                 substat_roll = pytesseract.image_to_string(substat_roll_region_bw, config=substat_roll_config, output_type=pytesseract.Output.STRING)
                 # print(substat_roll)
                 gear_level_text = pytesseract.image_to_string(gear_level_bw, config=gear_level_config, output_type=pytesseract.Output.STRING)
-                print(gear_level_text)
+                # print("gear_level_text: " + gear_level_text)
                 gear_enhance_text = pytesseract.image_to_string(gear_enhance_bw, config=gear_enhance_config, output_type=pytesseract.Output.STRING)
-                # print(gear_enhance_text)
+                # print("gear_enhance_text: " + gear_enhance_text)
                 gear_type_text = pytesseract.image_to_string(gear_type_bw, config=gear_type_config, output_type=pytesseract.Output.STRING)
-                # print(gear_type_text)
+                # print("gear_type_text: " + gear_type_text)
                 
                 try:
                     gear_level = gearparser.remove_newline(gear_level_text)
