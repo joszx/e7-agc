@@ -4,6 +4,7 @@ import pytesseract
 from myexception import GearParseException, GearLevelException
 import screengrabber
 import gearparser
+import env
 from edgedetector import EdgeDetector
 from gear.gear import Gear
 from windowcapture import WindowCapture
@@ -55,8 +56,10 @@ class logic:
 
             # print(enhance_equipment_text)
 
-            # cv.imshow('Enhance equipment region', enhance_equipment_region)
-            # cv.imshow('Enhance equipment bw', enhance_equipment_bw)
+            if (env.isDevMode()):
+                cv.imshow('Enhance equipment region', enhance_equipment_region)
+                cv.imshow('Enhance equipment bw', enhance_equipment_bw)
+
 
             if enhance_equipment_text == 'Enhance Equipment' or enhance_equipment_text == 'Substat Modification':
                 enhance_page_detector.update_value(True)
@@ -103,13 +106,13 @@ class logic:
                 gear_type_bw = screengrabber.transform_image_bw(gear_type_region, 30)
 
 
-
-                # cv.imshow('Computer Vision', screenshot)
-                # cv.imshow('CV substat roll region bw', substat_roll_region_bw)
-                # cv.imshow('CV black and white substat region', substat_text_region_bw)
-                # cv.imshow('CV gear level bw', gear_level_bw)
-                # cv.imshow('CV gear enhance bw', gear_enhance_bw)
-                # cv.imshow('CV gear type', gear_type_bw)
+                if (env.isDevMode()):
+                    cv.imshow('Computer Vision', screenshot)
+                    cv.imshow('CV substat roll region bw', substat_roll_region_bw)
+                    cv.imshow('CV black and white substat region', substat_text_region_bw)
+                    cv.imshow('CV gear level bw', gear_level_bw)
+                    cv.imshow('CV gear enhance bw', gear_enhance_bw)
+                    cv.imshow('CV gear type', gear_type_bw)
 
                 # debug the loop rate
                 # print('FPS {}'.format(1 / (time.time() - loop_time)))
@@ -140,15 +143,18 @@ class logic:
                     gear_type = gearparser.parse_gear_type(gearparser.remove_newline(gear_type_text))
                     gear_enhance_level = gearparser.parse_gear_enhance_level(gearparser.remove_newline(gearparser.remove_plussign(gear_enhance_text)))
                     substat_text = gearparser.str_to_list(substat_text)
-                    print(substat_text)
-                    print(substat_roll)
                     substat_roll = gearparser.str_to_list(substat_roll)
-                    print(substat_roll)
                     substat_text, substat_roll = gearparser.parse_substats(substat_text, substat_roll)
 
                     curr_gear = Gear(gear_level, gear_type, gear_enhance_level, substat_text, substat_roll)
-                    print(curr_gear)
+        
                     out = curr_gear
+
+                    if (env.isDevMode):
+                        print(substat_text)
+                        print(substat_roll)
+                        print(substat_roll)
+                        print(curr_gear)
 
                 except GearParseException as e:
                     details = e.args[0]
